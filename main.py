@@ -106,17 +106,17 @@ def process() -> None:
             for _category in section:
                 choices_category.append("{}: {}".format(str(_n), str(_category.value)))
                 _n += 1
-            category_number = gui.choicebox(title=title_category, msg=msg_category, choices=choices_category)
-            if not category_number:
+            category_name = gui.choicebox(title=title_category, msg=msg_category, choices=choices_category)
+            if not category_name:
                 continue
-            category_number = str(category_number).split(":")[0].strip()
+            category_number = str(category_name).split(":")[0].strip()
             category_number = int(category_number)-1
             category = section[category_number]
             print("selected category #{}: {}".format(category_number, str(category.value)))
 
             # ask for value
             title_value = "Data Value"
-            msg_value = "enter value to add"
+            msg_value = "enter value to add for\n{}".format(category_name)
             value = gui.enterbox(title=title_value, msg=msg_value)
             if not value:
                 continue
