@@ -121,7 +121,6 @@ def process() -> None:
             if not value:
                 continue
             value = str(value).strip().replace(',', '.')
-            value = float(value)
             print("received value = {}".format(value))
 
             # calculate day row
