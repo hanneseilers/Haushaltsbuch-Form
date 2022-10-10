@@ -22,12 +22,12 @@ def process() -> None:
         # ask for date
         title_date = "Date?"
         msg_date = "enter date:"
-        fields_date = ["year", "month", "day"]
-        values_date = [year, month, day]
+        fields_date = ["day", "month", "year"]
+        values_date = [day, month, year]
         values_date = gui.multenterbox(title=title_date, msg=msg_date, fields=fields_date, values=values_date)
         if not values_date:
             continue
-        year, month, day = values_date
+        day, month, year = values_date
         year = str(year).zfill(2)
         month = str(month).zfill(2)
         day = str(day).zfill(2)
