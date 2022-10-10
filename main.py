@@ -11,6 +11,7 @@ def process() -> None:
     # init year and date values
     year = date.today().year
     year = str(year)[-2] + str(year)[-1]
+    month = str(date.today().month).zfill(2)
     day = str(date.today().day).zfill(2)
 
     # ask if to start or to end
@@ -21,17 +22,18 @@ def process() -> None:
         # ask for date
         title_date = "Date?"
         msg_date = "enter date:"
-        fields_date = ["year", "day"]
-        values_date = [year, day]
+        fields_date = ["year", "month", "day"]
+        values_date = [year, month, day]
         values_date = gui.multenterbox(title=title_date, msg=msg_date, fields=fields_date, values=values_date)
         if not values_date:
             continue
-        year, day = values_date
+        year, month, day = values_date
         year = str(year).zfill(2)
+        month = str(month).zfill(2)
         day = str(day).zfill(2)
 
         # get workbook file (or create it)
-        wb_filename = get_workbook(base_file=monthly_filename, year=year, day=day)
+        wb_filename = get_workbook(base_file=monthly_filename, year=year, month=month)
         if not (
             exists(wb_filename) or
             isfile(wb_filename)
@@ -146,8 +148,8 @@ def get_header(worksheet: xl.Workbook, row=1, column_start=2, column_end=100) ->
     return header
 
 
-def get_workbook(base_file: str, year: str = "", day: str = "") -> str:
-    return base_file.replace("%y", str(year)).replace("%d", str(day))
+def get_workbook(base_file: str, year: str = "", month: str = "") -> str:
+    return base_file.replace("%y", str(year)).replace("%d", str(month))
 
 
 # ---- MAIN ----
