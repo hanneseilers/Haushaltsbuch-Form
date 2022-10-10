@@ -22,12 +22,12 @@ def process() -> None:
         # ask for date
         title_date = "Date?"
         msg_date = "enter date:"
-        fields_date = ["year", "month", "day"]
-        values_date = [year, month, day]
+        fields_date = ["day", "month", "year"]
+        values_date = [day, month, year]
         values_date = gui.multenterbox(title=title_date, msg=msg_date, fields=fields_date, values=values_date)
         if not values_date:
             continue
-        year, month, day = values_date
+        day, month, year = values_date
         year = str(year).zfill(2)
         month = str(month).zfill(2)
         day = str(day).zfill(2)
@@ -53,7 +53,14 @@ def process() -> None:
             continue
 
         # load header
-        wb = xl.load_workbook(wb_filename, keep_vba=True, keep_links=True)
+        wb = xl.load_workbook(wb_filename, keep_vba=True, keep_links=True, )
+
+        # oad all sheets
+        if isinstance(wb, xl.Workbook):
+            for ws_name in wb.sheetnames:
+                print("loading worksheet {}".format(ws_name))
+                _ws = wb[ws_name]
+
         ws = wb.active
         header = get_header(worksheet=ws, row=header_row, column_start=header_column_start,
                             column_end=header_column_end)
@@ -66,15 +73,19 @@ def process() -> None:
             # group columns into sections by color
             for cell in header:
 
+                # get section color, if possible
+                color = "default"
                 if hasattr(cell, "fill")\
                         and hasattr(cell.fill, "bgColor")\
                         and hasattr(cell.fill.bgColor, "rgb"):
 
-                    color = cell.fill.bgColor.rgb
-                    # create section entry for new color, if needed
-                    if color not in sections.keys():
-                        sections[color] = []
-                    sections[color].append(cell)
+                    if isinstance(cell.fill.bgColor.rgb, str):
+                        color = cell.fill.bgColor.rgb
+
+                # create section entry for new color, if needed
+                if color not in sections.keys():
+                    sections[color] = []
+                sections[color].append(cell)
 
             print("found {} sections ({})".format(len(sections), str(sections.keys())))
 
@@ -89,6 +100,8 @@ def process() -> None:
             choice = gui.buttonbox(title=title_section, msg=msg_section, choices=choices_selection)
             choice = str(choice).replace('[', '').replace(']', '').split(":")[1].strip()
             section = sections[choice]
+            if not section:
+                continue
             print("selected section with color {}".format(str(choice)))
 
             # ask for category
@@ -100,18 +113,21 @@ def process() -> None:
             for _category in section:
                 choices_category.append("{}: {}".format(str(_n), str(_category.value)))
                 _n += 1
-            category_number = gui.choicebox(title=title_category, msg=msg_category, choices=choices_category)
-            category_number = str(category_number).split(":")[0].strip()
+            category_name = gui.choicebox(title=title_category, msg=msg_category, choices=choices_category)
+            if not category_name:
+                continue
+            category_number = str(category_name).split(":")[0].strip()
             category_number = int(category_number)-1
             category = section[category_number]
             print("selected category #{}: {}".format(category_number, str(category.value)))
 
             # ask for value
             title_value = "Data Value"
-            msg_value = "enter value to add"
+            msg_value = "enter value to add for\n{}".format(category_name)
             value = gui.enterbox(title=title_value, msg=msg_value)
+            if not value:
+                continue
             value = str(value).strip().replace(',', '.')
-            value = float(value)
             print("received value = {}".format(value))
 
             # calculate day row
