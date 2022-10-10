@@ -89,6 +89,8 @@ def process() -> None:
             choice = gui.buttonbox(title=title_section, msg=msg_section, choices=choices_selection)
             choice = str(choice).replace('[', '').replace(']', '').split(":")[1].strip()
             section = sections[choice]
+            if not section:
+                continue
             print("selected section with color {}".format(str(choice)))
 
             # ask for category
@@ -101,6 +103,8 @@ def process() -> None:
                 choices_category.append("{}: {}".format(str(_n), str(_category.value)))
                 _n += 1
             category_number = gui.choicebox(title=title_category, msg=msg_category, choices=choices_category)
+            if not category_number:
+                continue
             category_number = str(category_number).split(":")[0].strip()
             category_number = int(category_number)-1
             category = section[category_number]
@@ -110,6 +114,8 @@ def process() -> None:
             title_value = "Data Value"
             msg_value = "enter value to add"
             value = gui.enterbox(title=title_value, msg=msg_value)
+            if not value:
+                continue
             value = str(value).strip().replace(',', '.')
             value = float(value)
             print("received value = {}".format(value))
