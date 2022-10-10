@@ -53,7 +53,14 @@ def process() -> None:
             continue
 
         # load header
-        wb = xl.load_workbook(wb_filename, keep_vba=True, keep_links=True)
+        wb = xl.load_workbook(wb_filename, keep_vba=True, keep_links=True, )
+
+        # oad all sheets
+        if isinstance(wb, xl.Workbook):
+            for ws_name in wb.sheetnames:
+                print("loading worksheet {}".format(ws_name))
+                _ws = wb[ws_name]
+
         ws = wb.active
         header = get_header(worksheet=ws, row=header_row, column_start=header_column_start,
                             column_end=header_column_end)
