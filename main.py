@@ -66,15 +66,19 @@ def process() -> None:
             # group columns into sections by color
             for cell in header:
 
+                # get section color, if possible
+                color = "default"
                 if hasattr(cell, "fill")\
                         and hasattr(cell.fill, "bgColor")\
                         and hasattr(cell.fill.bgColor, "rgb"):
 
-                    color = cell.fill.bgColor.rgb
-                    # create section entry for new color, if needed
-                    if color not in sections.keys():
-                        sections[color] = []
-                    sections[color].append(cell)
+                    if isinstance(cell.fill.bgColor.rgb, str):
+                        color = cell.fill.bgColor.rgb
+
+                # create section entry for new color, if needed
+                if color not in sections.keys():
+                    sections[color] = []
+                sections[color].append(cell)
 
             print("found {} sections ({})".format(len(sections), str(sections.keys())))
 
