@@ -216,3 +216,7 @@ def get_files_from_dir(subdir:str) -> list:
 def __rrelace(s:str, old:str, new:str, occurrence:int=1):
     left = s.rsplit(old, occurrence)
     return new.join(left)
+
+
+def read_bon_data_from_file(filepath:str):
+    pass
