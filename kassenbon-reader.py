@@ -3,8 +3,13 @@ import functions as f
 import config as cfg
 
 
-def process(bon_dir:str) -> None:
-    print(f.get_files_from_dir(bon_dir))
+def process(subdir:str) -> None:
+    for filepath in f.get_files_from_dir(subdir):
+        bon = f.read_bon_data_from_file(
+            filepath=filepath,
+            data_seperator=cfg.bon_data_seperator)
+
+        print(bon)
 
 
 # ---- MAIN ----
