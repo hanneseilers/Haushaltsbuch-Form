@@ -20,7 +20,9 @@ def process() -> None:
         year, day, month = values_date
 
         # get workbook file (or create it)
-        wb_data = f.get_workbook(year, month)
+        wb_data = f.get_workbook(year=year,
+                                 month=month,
+                                 base_filename=cfg.base_filename)
 
         # check if workbook is readable
         if not wb_data:
@@ -59,9 +61,11 @@ def process() -> None:
 
             # calculate day row
             if f.add_value_to_worksheet(worksheet=active_worksheet,
-                                      day=day,
-                                      category=category,
-                                      value=value):
+                                        day=day,
+                                        category=category,
+                                        value=value,
+                                        date_row_start=cfg.date_row_start,
+                                        date_row_end=cfg.date_row_end):
                 workbook.save(workbook_filename)
                 print(f"data saved to {workbook_filename}")
             else:

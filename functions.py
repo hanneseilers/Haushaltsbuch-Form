@@ -6,7 +6,6 @@ from os import access, R_OK, W_OK, listdir
 from os.path import exists, isfile, join
 from shutil import copyfile
 from datetime import date
-import config as cfg
 
 def init_date() -> tuple[str, str, str]:
     # init year and date values
@@ -90,14 +89,14 @@ def get_workbook_filename(base_file: str, year: str = "", month: str = "") -> st
     return base_file.replace("%y", str(year)).replace("%d", str(month))
 
 
-def get_workbook(year:str, month:str) -> tuple[str, xl.Workbook, xl_worksheet.Worksheet]| None:
+def get_workbook(year:str, month:str, base_filename:str) -> tuple[str, xl.Workbook, xl_worksheet.Worksheet]| None:
     # get workbook file (or create it)
-    wb_filename = get_workbook_filename(base_file=cfg.monthly_filename, year=year, month=month)
+    wb_filename = get_workbook_filename(base_file=base_filename, year=year, month=month)
     if not (
             exists(wb_filename) or
             isfile(wb_filename)
     ):
-        wb_base_filename = get_workbook_filename(base_file=cfg.base_filename)
+        wb_base_filename = get_workbook_filename(base_file=base_filename)
         print(f"copying file {wb_base_filename} to {wb_filename}")
         copyfile(wb_base_filename, wb_filename)
 
@@ -173,10 +172,12 @@ def get_choices(data:dict|list, use_choice_value:bool = False) -> list[str]:
 
 def add_value_to_worksheet(worksheet: xl_worksheet.Worksheet,
                            day: int | str,
-                           category:xl_cell.Cell, value: str | int) -> xl.Workbook | None:
+                           category:xl_cell.Cell, value: str | int,
+                           date_row_start:int,
+                           date_row_end:int) -> xl.Workbook | None:
     # calculate day row
-    data_cell_row = cfg.date_row_start + int(day) - 1
-    if data_cell_row <= cfg.date_row_end:
+    data_cell_row = date_row_start + int(day) - 1
+    if data_cell_row <= date_row_end:
 
         # calculate cell
         data_cell_value = category.column_letter + str(data_cell_row)
