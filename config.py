@@ -19,3 +19,5 @@ date_row_end = 33
 # ---- KASSENBON READER ----
 bon_dir_default = "bons"
 bon_data_seperator = ';'
+bon_content_key_name = "article"
+bon_content_key_value = "current"
