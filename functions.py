@@ -5,7 +5,16 @@ import easygui as gui
 from os import access, R_OK, W_OK
 from os.path import exists, isfile
 from shutil import copyfile
+from datetime import date
 import config as cfg
+
+def init_date() -> tuple[str, str, str]:
+    # init year and date values
+    year = date.today().year
+    year = str(year)[-2] + str(year)[-1]
+    month = str(date.today().month).zfill(2)
+    day = str(date.today().day).zfill(2)
+    return year, month, day
 
 def ask_for_date(year:str, day:str, month:str) -> tuple[str, str, str]:
     # ask for date

@@ -1,15 +1,12 @@
 import functions as f
 import easygui as gui
-from datetime import date
+
 import config as cfg
 
 
 def process() -> None:
     # init year and date values
-    year = date.today().year
-    year = str(year)[-2] + str(year)[-1]
-    month = str(date.today().month).zfill(2)
-    day = str(date.today().day).zfill(2)
+    year, month, day = f.init_date()
 
     # ask if to start or to end
     title_start = "Continue?"
