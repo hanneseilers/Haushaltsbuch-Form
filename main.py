@@ -55,7 +55,7 @@ def process() -> None:
         # load header
         wb = xl.load_workbook(wb_filename, keep_vba=True, keep_links=True, )
 
-        # oad all sheets
+        # load all sheets
         if isinstance(wb, xl.Workbook):
             for ws_name in wb.sheetnames:
                 print("loading worksheet {}".format(ws_name))
