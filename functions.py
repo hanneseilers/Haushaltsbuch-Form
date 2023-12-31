@@ -2,8 +2,8 @@ import openpyxl as xl
 import openpyxl.worksheet.worksheet as xl_worksheet
 import openpyxl.cell.cell as xl_cell
 import easygui as gui
-from os import access, R_OK, W_OK
-from os.path import exists, isfile
+from os import access, R_OK, W_OK, listdir
+from os.path import exists, isfile, join
 from shutil import copyfile
 from datetime import date
 import config as cfg
@@ -198,3 +198,21 @@ def add_value_to_worksheet(worksheet: xl_worksheet.Worksheet,
         return worksheet
 
     return None
+
+
+def get_files_from_dir(subdir:str) -> list:
+    files = []
+
+    subdir = __rrelace(subdir, '/', '')
+    subdir = __rrelace(subdir, '\\', '')
+
+    for filename in listdir(subdir):
+        filepath = str(join(subdir, filename))
+        if isfile(filepath) and access(filepath, R_OK):
+            files.append(filepath)
+
+    return files
+
+def __rrelace(s:str, old:str, new:str, occurrence:int=1):
+    left = s.rsplit(old, occurrence)
+    return new.join(left)
