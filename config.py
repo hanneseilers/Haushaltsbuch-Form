@@ -17,3 +17,4 @@ date_row_start = 3
 date_row_end = 33
 
 # ---- KASSENBON READER ----
+bon_dir_default = "bons"

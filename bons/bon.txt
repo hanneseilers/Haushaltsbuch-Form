@@ -1,0 +1,6 @@
+# 20.12.2023
+
+Artikel A;3,55€
+Artikel B ; 4,55EUR
+Artikel C;  5,20€
+Artikel D;  6EUR
