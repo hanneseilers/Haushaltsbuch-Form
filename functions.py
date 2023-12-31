@@ -219,5 +219,58 @@ def __rrelace(s:str, old:str, new:str, occurrence:int=1):
     return new.join(left)
 
 
-def read_bon_data_from_file(filepath:str):
-    pass
+def get_date_from_bon_line(line:str):
+    # Removing '#' and any whitespace
+    cleaned_date_string = line.replace('#', '').strip()
+
+    # Extracting day, month, and year
+    day, month, year = map(int, cleaned_date_string.split('.'))
+
+    # Converting the string to a datetime object
+    return date(year, month, day)
+
+
+def read_bon_data_from_file(
+        filepath:str,
+        data_seperator:str=';',
+        data_name_key="name",
+        data_value_key="value") -> tuple[str, date, list[dict]]|None:
+
+    if access(filepath, R_OK):
+        f = open(filepath, 'r')
+        print(f"reading bon file {filepath}")
+        _n = 0
+
+        # init bon data
+        bon_date: date | None = None
+        bon_content: list[dict] = []
+
+        for line in f:
+
+            # process lines with content, skip empty lines
+            line = line.strip()
+            if len(line) > 0:
+
+                # first line is date
+                if _n == 0:
+                    bon_date = get_date_from_bon_line(line)
+
+                # bon date read, continue with content
+                if bon_date:
+                    _data = line.split(data_seperator)
+                    if len(_data) > 1:
+                        bon_content.append({
+                            data_name_key: _data[0].strip(),
+                            data_value_key: _data[1].strip()
+                        })
+
+                _n +=1
+
+        f.close()
+
+        # return bon data only if date and data content fond
+        if bon_date and len(bon_content) > 0:
+            return filepath, bon_date, bon_content
+
+    print(f"CANNOT read {filepath}")
+    return None
